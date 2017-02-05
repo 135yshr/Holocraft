@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockItemB : MonoBehaviour {
+public class BlockItemBehaviour : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
