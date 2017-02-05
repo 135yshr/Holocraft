@@ -515,7 +515,7 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: Minecraft
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: "C:\\Users\\isago\\OneDrive\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\unity\\Minecraft\\Assets\\WSATestCertificate.pfx"
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany
   metroCertificateIssuer: DefaultCompany
