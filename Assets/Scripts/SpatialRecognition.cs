@@ -62,7 +62,21 @@ public class SpatialRecognition : MonoBehaviour
     }
     private void SurfaceMeshesToPlanes_MakePlanesComplete(object source, EventArgs args)
     {
-        Debug.Log("[Complete] MakePlanes");
+        var floors = SurfaceMeshesToPlanes.Instance.GetActivePlanes(PlaneTypes.Floor);
+        if (floors.Count <= minimumFloors)
+        {
+            SpatialMappingManager.Instance.StartObserver();
+            meshesProcessed = false;
+            return;
+        }
+        RemoveVertices(SurfaceMeshesToPlanes.Instance.ActivePlanes);
+        foreach (var floor in floors)
+        {
+            Debug.Log("Name: " + floor.name);
+            Debug.Log("position: " + floor.transform.position);
+            Debug.Log("rotation: " + floor.transform.rotation);
+            Debug.Log("scale: " + floor.transform.localScale);
+        }
     }
 
     private void RemoveVertices(IEnumerable<GameObject> boundingObjects)
