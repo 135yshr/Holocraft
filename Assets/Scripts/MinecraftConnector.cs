@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
 public class MinecraftConnector : MonoBehaviour
 {
+    public delegate void ReceivedCallback(JSONObject json);
+    public static event ReceivedCallback ReceivedEvent = null;
 
     [Tooltip("The connection port on the machine to use.")]
     public int ConnectionPort = 25566;
@@ -49,6 +52,36 @@ public class MinecraftConnector : MonoBehaviour
         {
             return;
         }
+
+        var stream = networkClient.GetStream();
+        if (stream.DataAvailable == false)
+        {
+            return;
+        }
+
+        int size = ReadSize(stream);
+        Debug.Log("Data Size: " + size);
+
+        byte[] data = new byte[size];
+        int readSize = 0;
+        while (readSize != size)
+        {
+            readSize += stream.Read(data, readSize, size - readSize);
+        }
+        var text = System.Text.Encoding.Default.GetString(data);
+        Debug.Log(text);
+
+        if (ReceivedEvent != null)
+        {
+            ReceivedEvent(new JSONObject(text));
+        }
+
+        ClientConnected = false;
+        networkClient.Close();
+
+        // And wait for the next connection.
+        AsyncCallback callback = new AsyncCallback(OnClientConnect);
+        networkListener.BeginAcceptTcpClient(callback, this);
     }
 
     /// <summary>
@@ -66,6 +99,21 @@ public class MinecraftConnector : MonoBehaviour
                 ClientConnected = true;
             }
         }
+    }
+
+    private int ReadSize(Stream stream)
+    {
+        byte[] bytes = new byte[4];
+        stream.Read(bytes, 0, 4);
+        //byte t = bytes[0];
+        //bytes[0] = bytes[3];
+        //bytes[3] = t;
+
+        //t = bytes[1];
+        //bytes[1] = bytes[2];
+        //bytes[2] = t;
+
+        return BitConverter.ToInt32(bytes, 0);
     }
 #endif
 }
