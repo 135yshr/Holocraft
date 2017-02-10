@@ -295,6 +295,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 842d002da9488c243a2b1fc0bd37b9ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConnectionPort: 25566
+  target: {fileID: 608659932}
 --- !u!4 &942005556
 Transform:
   m_ObjectHideFlags: 0

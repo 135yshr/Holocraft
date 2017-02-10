@@ -1,10 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockItemBehaviour : MonoBehaviour
+public class BlockItemBehaviour : MonoBehaviour, IMinecraftEventHandler
 {
     public GameObject blockPrefab;
+
+    public void Received(McData json)
+    {
+        Debug.Log("Received");
+        Debug.Log(json);
+        //string action = json.GetField("action").str;
+
+    }
 
     // Use this for initialization
     void Start()

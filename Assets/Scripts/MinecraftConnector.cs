@@ -5,14 +5,14 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MinecraftConnector : MonoBehaviour
 {
-    public delegate void ReceivedCallback(JSONObject json);
-    public static event ReceivedCallback ReceivedEvent = null;
-
     [Tooltip("The connection port on the machine to use.")]
     public int ConnectionPort = 25566;
+
+    public GameObject target;
 
 #if UNITY_EDITOR
 
@@ -30,7 +30,6 @@ public class MinecraftConnector : MonoBehaviour
     /// Tracks if a client is connected.
     /// </summary>
     private bool ClientConnected = false;
-
 
     // Use this for initialization
     void Start()
@@ -71,10 +70,9 @@ public class MinecraftConnector : MonoBehaviour
         var text = System.Text.Encoding.Default.GetString(data);
         Debug.Log(text);
 
-        if (ReceivedEvent != null)
-        {
-            ReceivedEvent(new JSONObject(text));
-        }
+        var json = JsonUtility.FromJson<McData>(text);
+        //var json = new JSONObject(text);
+        ExecuteEvents.Execute<IMinecraftEventHandler>(target, null, (hander, e) => { hander.Received(json); });
 
         ClientConnected = false;
         networkClient.Close();
