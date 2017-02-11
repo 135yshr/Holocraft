@@ -10,6 +10,7 @@ public class McData
     public Pos pos;
 }
 
+[Serializable]
 public class Pos
 {
     public int x;

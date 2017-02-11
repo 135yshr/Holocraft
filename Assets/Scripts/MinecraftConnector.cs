@@ -58,20 +58,23 @@ public class MinecraftConnector : MonoBehaviour
             return;
         }
 
-        int size = ReadSize(stream);
-        Debug.Log("Data Size: " + size);
+        var reader = new StreamReader(stream);
+        string text = reader.ReadToEnd();
 
-        byte[] data = new byte[size];
-        int readSize = 0;
-        while (readSize != size)
-        {
-            readSize += stream.Read(data, readSize, size - readSize);
-        }
-        var text = System.Text.Encoding.Default.GetString(data);
+        //byte[] data = new byte[1024];
+        //int readSize = 0;
+        //while (data[readSize] != '\n')
+        //{
+        //    readSize += stream.Read(data, readSize, size - readSize);
+        //}
+        //var text = System.Text.Encoding.Default.GetString(data);
         Debug.Log(text);
 
         var json = JsonUtility.FromJson<McData>(text);
-        //var json = new JSONObject(text);
+        if (json == null)
+        {
+            Debug.Log("json is null");
+        }
         ExecuteEvents.Execute<IMinecraftEventHandler>(target, null, (hander, e) => { hander.Received(json); });
 
         ClientConnected = false;

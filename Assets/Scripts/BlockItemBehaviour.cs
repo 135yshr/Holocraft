@@ -7,12 +7,17 @@ public class BlockItemBehaviour : MonoBehaviour, IMinecraftEventHandler
 {
     public GameObject blockPrefab;
 
-    public void Received(McData json)
+    public void Received(McData data)
     {
-        Debug.Log("Received");
-        Debug.Log(json);
-        //string action = json.GetField("action").str;
-
+        if (data == null)
+        {
+            Debug.Log("data is null");
+        }
+        var msg = string.Format("action: {0}, {1}:{2}:{3}", data.action, data.pos.x, data.pos.y, data.pos.z);
+        Debug.Log(msg);
+        Instantiate(blockPrefab,
+            new Vector3(data.pos.x, data.pos.y, data.pos.z),
+            Quaternion.Euler(0, 0, 0));
     }
 
     // Use this for initialization
